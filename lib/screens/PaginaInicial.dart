@@ -23,7 +23,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                 context,
                 MaterialPageRoute(builder: (_) => CriaConta()),
               ),
-              leading: Icon(FontAwesomeIcons.sign),
+              leading: Icon(FontAwesomeIcons.ad),
               title: Text('Criar Conta'),
             ),
             ListTile(
