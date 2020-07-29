@@ -3,6 +3,7 @@ import 'package:apprestaurant/models/order.dart';
 import 'package:flutter/material.dart';
 
 class CarrinhoScreen extends StatefulWidget {
+  static const String id = 'CarrinhoScreen';
   @override
   _CarrinhoScreenState createState() => _CarrinhoScreenState();
 }
@@ -25,6 +26,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.circular(15.0)),
                 ),
+//==============================================================================
                 Expanded(
                   child: Container(
                     margin: EdgeInsets.all(12.0),
@@ -50,49 +52,36 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                         SizedBox(
                           height: 10.0,
                         ),
-                        Container(
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(width: 0.8, color: Colors.black),
-                          ),
+                        Flexible(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  print('Tocado');
-                                },
-                                child: Text('-',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.w600,
-                                    )),
-                              ),
-                              SizedBox(width: 20.0),
-                              Text(
-                                order.quantity.toString(),
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(width: 20.0),
-                              GestureDetector(
-                                onTap: () {},
+                              buildOutlineButtom(
+                                  icon: Icons.remove,
+                                  press: () {
+                                    if (order.quantity > 1) {
+                                      setState(() {
+                                        order.quantity--;
+                                      });
+                                    }
+                                  }),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 4 / 2),
                                 child: Text(
-                                  '+',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  order.quantity.toString().padLeft(2, "0"),
+                                  style: Theme.of(context).textTheme.headline6,
                                 ),
                               ),
+                              buildOutlineButtom(
+                                  icon: Icons.add,
+                                  press: () {
+                                    setState(() {
+                                      order.quantity++;
+                                    });
+                                  }),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -101,13 +90,29 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
             ),
           ),
           Container(
-            margin: EdgeInsets.all(10.0),
+            margin: EdgeInsets.symmetric(vertical: 14),
             child: Text(
-              '\$${order.quantity * order.food.price}',
+              '\Kz${order.food.price}',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+//Metodo para selecionar a quantidade===========================================
+  SizedBox buildOutlineButtom({IconData icon, Function press}) {
+    return SizedBox(
+      width: 40.0,
+      height: 32.0,
+      child: OutlineButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon),
+        onPressed: press,
       ),
     );
   }
@@ -137,7 +142,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'TimeOut',
+                      'Tempo',
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.w600),
                     ),
@@ -158,7 +163,7 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                           fontSize: 16.0, fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      '\$${precoTotal.toStringAsFixed(2)}',
+                      '\Kz${precoTotal.toStringAsFixed(2)}',
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w600,
@@ -195,7 +200,29 @@ class _CarrinhoScreenState extends State<CarrinhoScreen> {
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Fim da encomenda'),
+                    content: Text('Realizada com sucesso'),
+                    actions: <Widget>[
+                      RaisedButton(
+                        color: Colors.green,
+                        child: Text('Sim'),
+                        onPressed: () {},
+                      ),
+                      RaisedButton(
+                        color: Colors.red,
+                        onPressed: () {},
+                        child: Text('Nao'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ),
       ),
